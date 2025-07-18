@@ -1,0 +1,207 @@
+---
+title: "Dashboard in Quarto Package"
+author: "por **Breno C R Silva**"
+format: 
+  dashboard:
+    orientation: columns
+    logo: IMAGENS/LOGO_R_POSIT.webp
+    nav-buttons: [linkedin, github]
+---
+
+```{r}
+# ----------------------
+# Configurações Iniciais
+# ----------------------
+options(OutDec = ",", decimal = 2)
+
+library(shiny)
+library(shinydashboard)
+library(shinydashboardPlus)
+
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(DT)
+```
+
+
+# Projeto
+
+## Column {width=60%}
+
+::: {.card title="**Apresentação do Projeto e Equipe Técnica**"}
+
+* **Sobre o Projeto:** Este projeto consiste em um **Dashboard interativo** desenvolvido utilizando o **Pacote Quarto**, uma ferramenta moderna e poderosa para criação de documentos dinâmicos e relatórios reproduzíveis. O objetivo principal é fornecer visualizações intuitivas e personalizáveis de dados, permitindo análises mais eficientes e tomadas de decisão baseadas em evidências. Principais funcionalidades:
+  
+    ✔ Visualização dinâmica de dados    
+    ✔ Filtros interativos para exploração de informações    
+    ✔ Design responsivo e moderno     
+    ✔ Integração com linguagens como R e Python 
+  
+* **Equipe Técnica:**
+  
+    ```{=html}
+    <p align="center">
+    <img src="IMAGENS/PERFIL.jpeg" 
+         alt="Foto de Breno C R Silva"
+         style="width: 150px; height: 150px; border-radius: 50%; bject-fit: cover; border: 3px solid #354E76; 
+         transition: transform 0.3s; cursor: pointer;"
+    />
+    </p>
+    <p align="center"> Breno C R Silva </p>
+    ``` 
+    
+    📊 Bacharelando em Estatística \
+    🏛 Universidade Federal do Pará (UFPA) \
+    🔗 [LinkedIn](https://www.linkedin.com/in/brenosilva7) | [GitHub](https://github.com/csilv7)  
+    
+    Eu, Breno, sou um entusiasta de **Ciência de Dados e Visualização**, com experiência em análise estatística, modelagem preditiva e desenvolvimento de dashboards interativos. Atualmente, dedica-se a projetos que integram técnicas avançadas de estatística com ferramentas modernas de programação.  
+    
+    **Contato** \
+    ✉ **E-mail:**  breno.silva@icen.ufpa.br  \
+    🌐 **Site:** [www.seusite.com](https://www.seusite.com)
+    
+:::
+  
+## Column {width=40%}
+
+### Row {orientation="rows", height=33%}
+
+::: {.card title="**Conjunto de Dados**"}
+
+Os dados utilizados neste estudo correspondem a vendas simuladas de produtos em diferentes cidades, categorias e canais de venda. O conjunto de dados foi gerado aleatoriamente para fins de demonstração e análise. Abaixo estão as principais características dos dados:
+
+| **Variável**          | **Descrição**                                                | **Tipo de Dado**    |
+|-----------------------|--------------------------------------------------------------|---------------------|
+| `DATA_VENDA`          | Data em que a venda foi realizada.                           | Data (`Date`)       |
+| `CIDADE`              | Cidade onde a venda foi realizada.                           | Texto (`Character`) |
+| `PRODUTO`             | Nome do produto vendido.                                     | Texto (`Character`) |
+| `CATEGORIA`           | Categoria do produto (e.g., Eletrônicos, Roupas, Alimentos). | Texto (`Character`) |
+| `PRECO`               | Preço unitário do produto.                                   | Numérico (`Numeric`)|
+| `QUANTIDADE`          | Quantidade de unidades vendidas.                             | Inteiro (`Integer`) |
+| `CANAL_VENDA`         | Canal de venda utilizado (Online, Loja Física, Revendedor).  | Texto (`Character`) |
+| `DESCONTO_APLICADO`   | Desconto aplicado na venda (em percentual).                  | Numérico (`Numeric`)|
+
+O conjunto de dados contém **1000 observações**, cobrindo o período de **01/01/2025** a **30/06/2025**.
+
+:::
+
+
+
+### Row {orientation="rows", height=33%}
+
+::: {.card title="**Software Utilizado**"}
+
+O desenvolvimento deste dashboard foi realizado utilizando as seguintes ferramentas e pacotes:
+
+| **Ferramenta/Pacote** | **Versão** | **Descrição**                                                               |
+|-----------------------|------------|-----------------------------------------------------------------------------|
+| **R**                 | 4.3.1      | Linguagem de programação estatística utilizada para análise e visualização. |
+| **Quarto**            | 1.4        | Framework para criação de documentos dinâmicos e dashboards.                |
+| **Shiny**             | 1.8.0      | Pacote para criação de aplicativos web interativos em R.                    |
+| **ggplot2**           | 3.4.4      | Pacote para criação de gráficos estatísticos.                               |
+| **plotly**            | 4.10.2     | Pacote para criação de gráficos interativos.                                |
+| **dplyr**             | 1.1.3      | Pacote para manipulação de dados.                                           |
+| **DT**                | 0.29       | Pacote para exibição de tabelas interativas.                                |
+
+:::
+
+### Row {orientation="rows", height=33%}
+
+::: {.card title="**Metodologia**"}
+
+A metodologia adotada para a construção deste dashboard pode ser resumida nos seguintes passos:
+
+| **Etapa**                           | **Descrição**                                                                |
+|-------------------------------------|------------------------------------------------------------------------------|
+| **1. Definição do Problema**        | Identificação das necessidades de análise e visualização de dados de vendas. |
+| **2. Simulação de Dados**           | Geração de um conjunto de dados simulados para representar vendas.           |
+| **3. Desenvolvimento do Dashboard** | Criação de um aplicativo interativo usando Quarto e Shiny.                   |
+| **4. Filtros e Métricas**           | Implementação de filtros dinâmicos e métricas de resumo.                     |
+| **5. Visualização de Dados**        | Criação de gráficos interativos para análise exploratória.                   |
+| **6. Documentação**                 | Elaboração de textos explicativos e organização do layout.                   |
+
+:::
+
+# Resultados
+
+## {.sidebar}
+
+```{r}
+#| title: Filtros Interativos
+#| context: ui
+
+inputPanel(
+  selectInput(
+    "municipio", "Munícipio",
+    choices = c("Todos", unique(df.copy$CIDADE)),
+    selected = "Todos" 
+  ), 
+  
+  selectInput(
+    "cv", "Canal de Venda",
+    choices  = c("Todos", unique(df.copy$CV)),
+    selected = "Todos" 
+  ),
+  
+  dateRangeInput(
+    "dt_range", "PERÍODO",
+    start = min(df.copy$DATA),
+    end   = max(df.copy$DATA)
+  ),
+  
+  actionButton("reset_button", "REINICIAR",
+                style = "background-color: green; 
+                   color: white; 
+                   border-radius: 5px; 
+                   padding: 10px; 
+                   font-size: 12px",
+                 icon = icon("redo"))
+)
+```
+
+```{r}
+#| context: server
+
+# Função reativa para filtrar dados
+df.filter <- reactive({
+  # Dados de Entrada
+  df <- df.sales
+  
+  # Filtro por Município
+  if (input$municipio != "Todos") {
+    df <- df %>% filter(CIDADE == input$municipio)
+  }
+  
+  # Filtro por canal de venda
+  if (input$cv != "Todos") {
+    df <- df %>% filter(CV == input$cv)
+  }
+  
+  # Filtro por período
+  df <- df %>%
+    filter((DATA >= input$dt_range[1]) & (DATA <= input$dt_range[2]))
+  
+  return(df)
+})
+
+# Botão de reset
+observeEvent(input$reset_button, {
+  updateSelectInput(session, "municipio", selected = "Todos")
+  updateSelectInput(session, "cv"       , selected = "Todos")
+  updateDateRangeInput(session, "dt_range",
+                       start = min(vendas$DATA),
+                       end   = max(vendas$DATA))
+})
+```
+
+
+## Row {height="40%"}
+
+### Métricas
+
+::: {.valuebox icon="pencil" color="primary" title="Total de Vendas"}
+`{r} sum(df.copy$PRECO * df.copy$QUANTIDADE)`
+:::
+
+### Ilustração Gráfica
