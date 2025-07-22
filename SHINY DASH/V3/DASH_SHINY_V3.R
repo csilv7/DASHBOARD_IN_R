@@ -11,7 +11,7 @@ library(dplyr)
 library(ggplot2)
 library(plotly)
 
-path <- "/cloud/project/CONJUNTO DE DADOS/DATA_GEN_V1.csv"
+path <- "~/PROJETOS/R/DASHBOARD/CONJUNTO DE DADOS/DATA_GEN_V1.csv"
 VENDAS.DF <- read.csv(path)
 
 # https://www.kaggle.com/code/ekrembayar/fifa-19-dashboard-with-r-shiny/report?select=FIFA+19+Player+DB.csv
@@ -82,6 +82,10 @@ ui <- dashboardPage(
       # ----------------------------------
       # [2.3.2] ABA - ANÁLISE EXPLORATÓRIA
       # ----------------------------------
+      
+      # ------------------------------
+      # [2.3.2.1] SUBABA - VISÃO GERAL
+      # ------------------------------
       tabItem(
         tabName = "VisionGeral",
         fluidRow(
@@ -91,14 +95,24 @@ ui <- dashboardPage(
         ),
         fluidRow(
           column(
-            width = 5,
+            width = 6,
             plotlyOutput("plotly_categ_prod")
           ),
           column(
-            width = 7,
+            width = 6,
             plotlyOutput("plotly_prod")
           )
         ),
+        fluidRow(
+          column(
+            width = 6,
+            plotlyOutput("plotly_hist_ValueTot")
+          ),
+          column(
+            width = 6,
+            plotlyOutput("plotly_boxplot_ValueTot")
+          )
+        )
       )
     )
   )
@@ -109,7 +123,7 @@ ui <- dashboardPage(
 # -----------------------------
 server <- function(input, output) {
   # Carregar Base de Dados
-  VENDAS.DF <- read.csv("/cloud/project/CONJUNTO DE DADOS/DATA_GEN_V1.csv")
+  VENDAS.DF <- read.csv("~/PROJETOS/R/DASHBOARD/CONJUNTO DE DADOS/DATA_GEN_V1.csv")
   
   # --------------
   # [3.1] FILTRO
@@ -203,6 +217,33 @@ server <- function(input, output) {
       )
     
     ggplotly(p.product)
+  })
+  
+  output$plotly_hist_ValueTot <- renderPlotly({
+    p.histVT <- df.filter() %>%
+      ggplot(aes(x = VALOR_TOTAL)) + 
+      geom_histogram(color = "white", fill = "darkblue", binwidth = 160) +
+      labs(x = "VALOR TOTAL", y = "FREQUÊNCIA") +
+      theme_classic(base_size = 12) +
+      theme(
+        axis.title.x = element_text(face = "bold"),
+        axis.title.y = element_text(face = "bold")
+      )
+    
+    ggplotly(p.histVT)
+  })
+  
+  output$plotly_boxplot_ValueTot <- renderPlotly({
+    p.BoxPlotVT <- VENDAS.DF %>%
+      ggplot() + 
+      geom_boxplot(aes(x = "", y = VALOR_TOTAL, group = 1), color = "darkblue") +
+      labs(y = "VALOR TOTAL") +
+      theme_classic(base_size = 12) +
+      theme(
+        axis.title.y = element_text(face = "bold")
+      )
+    
+    ggplotly(p.BoxPlotVT)
   })
   
 }

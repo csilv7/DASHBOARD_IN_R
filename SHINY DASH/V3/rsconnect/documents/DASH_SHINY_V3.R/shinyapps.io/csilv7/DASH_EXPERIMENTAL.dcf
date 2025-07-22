@@ -1,0 +1,13 @@
+name: DASH_EXPERIMENTAL
+title: DASH_EXPERIMENTAL
+username: csilv7
+account: csilv7
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15094214
+bundleId: 10636885
+url: https://csilv7.shinyapps.io/DASH_EXPERIMENTAL/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: CONJUNTO DE DADOS/DATA_GEN_V1.RData|CONJUNTO DE DADOS/DATA_GENERATION_V1.R|PLOTS_TESTS.R

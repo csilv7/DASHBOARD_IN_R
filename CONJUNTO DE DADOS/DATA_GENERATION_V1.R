@@ -175,22 +175,28 @@ df$PRODUTO <- mapply(function(cat) {
 
 # Preço médio por produto
 preco_base <- c(
-  "SMARTPHONE PREMIUM" = 4500,
+  "SMARTPHONE PREMIUM" = 2500,
   "FONE DE OUVIDO BLUETOOTH" = 350,
-  "CALÇA JEANS MASCULINA" = 180,
+  "CALÇA JEANS MASCULINA" = 190,
   "VESTIDO FLORAL FEMININO" = 220,
-  "CESTA DE FRUTAS ORGÂNICAS" = 80,
+  "CESTA DE FRUTAS ORGÂNICAS" = 90,
   "CAFÉ GOURMET (250G)" = 45,
-  "BEST-SELLER DE FICÇÃO" = 70,
+  "BEST-SELLER DE FICÇÃO" = 85,
   "LIVRO TÉCNICO/ACADÊMICO" = 150,
   "KIT DE CONSTRUÇÃO ROBÓTICA" = 280,
-  "BONECA COLECIONÁVEL" = 120
+  "BONECA COLECIONÁVEL" = 165
 )
 
 # Log-normal com base no preço base
 df$PRECO <- mapply(function(produto) {
-  media <- log(preco_base[produto])
-  round(rlnorm(1, meanlog = media, sdlog = 0.25), 2)
+  if (produto == "SMARTPHONE PREMIUM") {
+    media <- log(preco_base[produto])
+    round(rlnorm(1, meanlog = media, sdlog = 0.1), 2)
+  } else {
+    media <- log(preco_base[produto])
+    round(rlnorm(1, meanlog = media, sdlog = 0.5), 2)
+  }
+  
 }, df$PRODUTO)
 
 # Quantidade com base inversa do preço
@@ -206,9 +212,9 @@ df$QUANTIDADE <- mapply(function(preco) {
 
 # Desconto proporcional ao canal
 df$DESCONTO_APLICADO <- mapply(function(canal) {
-  if (canal == "ONLINE") runif(1, 0.05, 0.25)
-  else if (canal == "LOJA FÍSICA") runif(1, 0.01, 0.15)
-  else runif(1, 0.02, 0.2)
+  if (canal == "ONLINE") runif(1, 0.1, 0.2)
+  else if (canal == "LOJA FÍSICA") runif(1, 0.05, 0.15)
+  else runif(1, 0.15, 0.35)
 }, df$CANAL_VENDA)
 
 # RENDA_ESTIMADA (em R$ mil)
@@ -284,12 +290,15 @@ dates <- sample(c(dt, extra.dates)) # Concatena e Embaralha os valores do Vetor
 
 # Sazonalidade semanal
 weekly.seasonality <- c(1.1, 1.2, 1.0, 0.9, 0.8, 1.3, 1.5) # Sunday, Monday, Tuesday, Wednesday, Thursday, Friday and Saturday
+plot(x = 1:length(weekly.seasonality), y = weekly.seasonality, type = "l")
 
 # Sazonalidade mensal
 monthly.seasonality <- c(1.0, 0.9, 1.15, 1.25, 1.35, 1.05, 1.1, 1, 1.16, 1.26, 1.36, 1.15)
+plot(x = 1:length(monthly.seasonality), y = monthly.seasonality, type = "l")
 
 # Sazonalidade Anual
 annual.seasonality <- c(0.5, 1, 1.5, 1, 1.75, 2.5, 2, 2.5, 3.75, 4, 3.25, 4.25)
+plot(x = 1:length(annual.seasonality), y = annual.seasonality, type = "l")
 
 # Obter índices dos dias da semana
 weekday.idx <- as.numeric(format(dates, "%w")) + 1
@@ -298,6 +307,7 @@ year.idx <- as.numeric(format(dates, "%y")) - 14
 
 # Aplicar fator sazonal: vetorizado
 Zt.seasonal <- weekly.seasonality[weekday.idx] * monthly.seasonality[month.idx] * annual.seasonality[year.idx]
+#Zt.seasonal <- Zt.seasonal / sum(Zt.seasonal)
 
 # Efeito Sazonal
 df$SEASONAL_EFFECT <- Zt.seasonal
@@ -316,7 +326,7 @@ df$DIA_SEMANA <- as.numeric(format(dates, "%w")) + 1
 
 # Valor total ajustado
 df$VALOR_TOTAL <- round(
-  df$PRECO * df$QUANTIDADE * (1 - df$DESCONTO_APLICADO) * Zt.seasonal, 2
+  df$QUANTIDADE * df$PRECO * (1 - df$DESCONTO_APLICADO) * Zt.seasonal, 2
 )
 
 # Visualizar
