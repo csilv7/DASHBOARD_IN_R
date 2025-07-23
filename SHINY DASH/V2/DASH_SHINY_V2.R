@@ -246,8 +246,7 @@ server <- function(input, output) {
       q <- quantile(df$VALOR_TOTAL, probs = c(0.25, 0.75), na.rm = TRUE)
       iqr <- q[2] - q[1]
       df <- df %>% filter(
-        VALOR_TOTAL < (q[1] - 1.5 * iqr) |
-          VALOR_TOTAL > (q[2] + 1.5 * iqr)
+        VALOR_TOTAL < (q[1] - 1.5 * iqr) | VALOR_TOTAL > (q[2] + 1.5 * iqr)
       )
     }
     

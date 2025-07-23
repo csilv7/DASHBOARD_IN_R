@@ -6,12 +6,74 @@ library(ggplot2)
 library(plotly)
 library(echarts4r)
 
+library(leaflet)
+library(htmltools)
+
 # ----------
 #
 # ----------
 
 path <- "~/PROJETOS/R/DASHBOARD/CONJUNTO DE DADOS/DATA_GEN_V1.csv"
 VENDAS.DF <- read.csv(path)
+
+# ------------
+# [] MAPA
+# ------------
+
+
+# --- 1. Preparação dos Dados (Assumindo que VENDAS.DF e as coordenadas já existem) ---
+mapa_data_final <- VENDAS.DF %>%
+  select(CITY, LAT, LON, VALOR_TOTAL) %>%
+  group_by(CITY, LAT, LON) %>%
+  summarise(
+    VALUE_TOT = sum(VALOR_TOTAL, na.rm = TRUE),
+    VALUE_MEAN = mean(VALOR_TOTAL, na.rm = TRUE)
+  )
+# --- 2. Gerar o Mapa `leaflet` ---
+
+# Criar a paleta de cores com base no VALOR_TOTAL
+pal <- colorNumeric(
+  palette = "viridis", # Paleta de cores (ex: "magma", "plasma", "RdYlBu", etc.)
+  domain = mapa_data_final$VALUE_TOT # A faixa de valores para mapear cores
+)
+
+# Criar os rótulos que aparecerão ao passar o mouse (popups)
+labels <- sprintf(
+  "<strong>%s</strong><br/>Total de Vendas: R$%.2f",
+  mapa_data_final$CITY, mapa_data_final$VALUE_TOT
+) %>% lapply(htmltools::HTML) # Converte para HTML para renderização no popup
+
+# Criar o mapa
+mapa_final <- leaflet(mapa_data_final) %>%
+  addTiles() %>% # Adiciona o mapa base (OpenStreetMap)
+  # Centraliza o mapa na região dos municípios do Pará
+  setView(lng = -48.3, lat = -1.3, zoom = 9) %>%
+  addCircles(
+    lng = ~LON,
+    lat = ~LAT,
+    radius = 5000, # Raio fixo para os círculos em metros (ajuste conforme a escala)
+    fillColor = ~pal(VALUE_TOT), # Cor de preenchimento baseada no gradiente de VALOR_TOTAL
+    color = "black", # Cor da borda do círculo
+    weight = 1, # Espessura da borda
+    fillOpacity = 0.7, # Opacidade do preenchimento
+    label = labels, # Rótulos ao passar o mouse
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto"
+    )
+  ) %>%
+  addLegend(
+    pal = pal,
+    values = ~VALUE_TOT,
+    opacity = 0.7,
+    title = "Total de Vendas (R$)",
+    position = "bottomright" # Posição da legenda no mapa
+  )
+
+# Exibir o mapa
+mapa_final
+
 
 # ------------
 # [] CATEGORIA
