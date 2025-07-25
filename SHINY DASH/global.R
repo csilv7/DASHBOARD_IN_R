@@ -10,9 +10,13 @@ library(dplyr)
 library(tidyr)
 library(tidyverse)
 
+library(DT)
+
 library(ggplot2)
 library(plotly)
 library(echarts4r)
+
+library(htmlwidgets)
 
 library(leaflet)
 library(sf)
@@ -51,3 +55,5 @@ categories.and.products <- list(
 # --------------------
 # [5] CARREGAR MÓDULOS
 # --------------------
+source("MODULES/overview.R")
+source("MODULES/geograph.R")
