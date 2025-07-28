@@ -1,7 +1,7 @@
 # --------------------------
 # [1] Configurações Iniciais
 # --------------------------
-setwd("~/PROJETOS/R/DASHBOARD/SHINY DASH")
+#setwd("~/PROJETOS/R/DASHBOARD/SHINY DASH")
 source("global.R")
 
 # -----------------------------------
@@ -87,67 +87,6 @@ ui <- dashboardPage(
 # [3] BackEnd - Camada Servidor
 # -----------------------------
 server <- function(input, output) {
-  # -------------------------------
-  # [3.1] FILTROS PRIMÁRIOS (GERAL)
-  # -------------------------------
-  df.general_filter <- reactive({
-    # Filtro Período
-    df <- VENDAS %>% filter(DATA_VENDA >= input$date_range[1] & DATA_VENDA <= input$date_range[2])
-    
-    # Filtro Município
-    if (input$city_input != "TODAS") {
-      df <- df %>% filter(CITY == input$city_input)
-    }
-    
-    # Filtro Canal de Venda
-    if (input$canal_input != "TODOS") {
-      df <- df %>% filter(CANAL_VENDA == input$canal_input)
-    }
-    
-    # Retornar Data Frame Filtrado
-    return(df)
-  })
-  
-  # -------------------------------------------------------
-  # [3.2] FILTROS SECUNDÁRIOS (SOMENTE PARA O QUANTITATIVO)
-  # -------------------------------------------------------
-  df.secondary_filter <- reactive({
-    # Filtros Primários
-    df <- df.general_filter()
-    
-    # Filtro Sexo
-    if (input$filter_sex != "TODOS") {
-      df <- df %>% filter(SEX == input$filter_sex)
-    }
-    
-    # Filtro Categoria
-    if (input$filter_cat != "TODAS") {
-      df <- df %>% filter(CATEGORIA == input$filter_cat)
-    }
-    
-    # Filtro Outlier
-    if (input$filter_prod != "TODOS") {
-      df <- df %>% filter(PRODUTO == input$filter_prod)
-    }
-    if (input$filter_outlier == "SEM OUTLIERS") {
-      q <- quantile(df$VALOR_TOTAL, probs = c(0.25, 0.75), na.rm = TRUE)
-      iqr <- q[2] - q[1]
-      df <- df %>% filter(
-        VALOR_TOTAL >= (q[1] - 1.5 * iqr),
-        VALOR_TOTAL <= (q[2] + 1.5 * iqr)
-      )
-    } else if (input$filter_outlier == "SOMENTE OUTLIERS") {
-      q <- quantile(df$VALOR_TOTAL, probs = c(0.25, 0.75), na.rm = TRUE)
-      iqr <- q[2] - q[1]
-      df <- df %>% filter(
-        VALOR_TOTAL < (q[1] - 1.5 * iqr) | VALOR_TOTAL > (q[2] + 1.5 * iqr)
-      )
-    }
-    
-    # Retornar Data Frame Filtrado
-    return(df)
-  })
-  
   # --------------------------
   # [3.3] SUB-ABA: VISÃO GERAL
   # --------------------------

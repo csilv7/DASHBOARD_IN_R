@@ -21,7 +21,7 @@ library(htmlwidgets)
 library(leaflet)
 library(sf)
 
-setwd("C:/Users/user/Documents/PROJETOS/R/DASHBOARD/SHINY DASH")
+#setwd("C:/Users/user/Documents/PROJETOS/R/DASHBOARD/SHINY DASH")
 
 # -----------------------------------
 # [2] CARREGAMENTO DAS BASES DE DADOS
