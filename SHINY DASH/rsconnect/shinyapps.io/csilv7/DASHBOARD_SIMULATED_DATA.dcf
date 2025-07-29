@@ -1,13 +1,13 @@
 name: DASHBOARD_SIMULATED_DATA
-title:
+title: DASHBOARD_SIMULATED_DATA
 username: csilv7
 account: csilv7
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 15109787
-bundleId: 10686481
+bundleId: 10687216
 url: https://csilv7.shinyapps.io/DASHBOARD_SIMULATED_DATA/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: DASH_SHINY_V1.R|DATASET/DATA_GENERATION_V1.R
+ignoredFiles: DASH_SHINY_V1.R|DATASET/DATA_GEN_V1.RData|DATASET/DATA_GENERATION_V1.R

@@ -21,7 +21,7 @@ library(htmlwidgets)
 library(leaflet)
 library(sf)
 
-#setwd("C:/Users/user/Documents/PROJETOS/R/DASHBOARD/SHINY DASH")
+setwd("C:/Users/user/Documents/PROJETOS/R/DASHBOARD/SHINY DASH")
 
 # -----------------------------------
 # [2] CARREGAMENTO DAS BASES DE DADOS
@@ -47,6 +47,9 @@ categories.and.products <- list(
   "LIVROS" = c("BEST-SELLER DE FICÇÃO", "LIVRO TÉCNICO/ACADÊMICO"), 
   "BRINQUEDOS" = c("KIT DE CONSTRUÇÃO ROBÓTICA", "BONECA COLECIONÁVEL")
 )
+
+# Municípios (Mapa)
+citys <- c("Belém", "Ananindeua", "Marituba", "Benevides", "Santa Bárbara do Pará")
 
 # ----------------------
 # [4] FUNÇÕES UTILIZADAS

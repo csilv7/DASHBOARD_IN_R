@@ -1,7 +1,7 @@
 # --------------------------
 # [1] Configurações Iniciais
 # --------------------------
-#setwd("~/PROJETOS/R/DASHBOARD/SHINY DASH")
+setwd("~/PROJETOS/R/DASHBOARD/SHINY DASH")
 source("global.R")
 
 # -----------------------------------
