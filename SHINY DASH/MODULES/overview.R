@@ -13,7 +13,6 @@ mod_overview_ui <- function(id) {
       fluidRow(
         column(
           width = 4,
-          # Usar ns() para prefixar os IDs de input/output deste módulo
           selectInput(ns("city_input"), "CIDADE:", choices = c("TODAS", unique(VENDAS$CITY)))
         ),
         column(
